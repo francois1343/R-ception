@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Mouna — Commandes</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!-- EmailJS — inactif pour l'instant -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <link rel="stylesheet" href="commandes.css" />
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════
+       EN-TÊTE
+  ════════════════════════════════════════ -->
+  <header class="app-header">
+    <div class="header-brand">
+      <svg class="header-logo" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="9"  stroke="currentColor" stroke-width="1"/>
+        <circle cx="12" cy="13" r="2"  fill="currentColor" opacity=".5"/>
+        <circle cx="19" cy="11" r="1.5" fill="currentColor" opacity=".5"/>
+        <circle cx="20" cy="19" r="2"  fill="currentColor" opacity=".5"/>
+        <circle cx="13" cy="20" r="1.5" fill="currentColor" opacity=".5"/>
+      </svg>
+      <div>
+        <h1>La Mouna</h1>
+        <p>Caisse &amp; commandes</p>
+      </div>
+    </div>
+    <div class="header-meta">
+      <span id="headerDate"></span>
+      <span class="header-sep">·</span>
+      <span id="orderCount">0 commande(s)</span>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════════
+       LAYOUT : SIDEBAR  |  MENU  |  TICKET
+  ════════════════════════════════════════ -->
+  <div class="app-layout">
+
+    <!-- ── COL 1 : liste des commandes ── -->
+    <aside class="col-orders">
+      <button class="btn-new-order" id="btnNewOrder">+ Nouvelle commande</button>
+      <div class="order-list" id="orderList">
+        <p class="list-empty">Aucune commande ouverte.</p>
+      </div>
+    </aside>
+
+    <!-- ── COL 2 : menu (articles) ── -->
+    <section class="col-menu">
+
+      <!-- Recherche -->
+      <div class="menu-search-bar">
+        <span class="search-icon">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="10.5" y1="10.5" x2="14" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <input type="text" id="menuSearch" placeholder="Rechercher un article…" autocomplete="off" />
+        <button class="search-clear" id="searchClear" style="display:none">✕</button>
+      </div>
+
+      <!-- Onglets catégories -->
+      <div class="category-tabs" id="categoryTabs">
+        <button class="cat-tab active" data-cat="all">Tout</button>
+        <button class="cat-tab" data-cat="entrees">Entrées</button>
+        <button class="cat-tab" data-cat="pizzas">Pizzas</button>
+        <button class="cat-tab" data-cat="pates">Pâtes</button>
+        <button class="cat-tab" data-cat="viandes">Viandes</button>
+        <button class="cat-tab" data-cat="desserts">Desserts</button>
+        <button class="cat-tab" data-cat="boissons">Boissons</button>
+      </div>
+
+      <!-- Grille d'articles -->
+      <div class="menu-grid" id="menuGrid">
+
+        <!-- ─── ENTRÉES ─── -->
+        <div class="menu-category-label" data-cat="entrees">Entrées</div>
+        <button class="menu-item" data-cat="entrees" data-name="Salade verte"          data-price="5.50"><span class="item-name">Salade verte</span><span class="item-price">5,50 €</span></button>
+        <button class="menu-item" data-cat="entrees" data-name="Soupe du jour"         data-price="5.00"><span class="item-name">Soupe du jour</span><span class="item-price">5,00 €</span></button>
+        <button class="menu-item" data-cat="entrees" data-name="Bruschetta"            data-price="6.00"><span class="item-name">Bruschetta</span><span class="item-price">6,00 €</span></button>
+        <button class="menu-item" data-cat="entrees" data-name="Assiette charcuterie"  data-price="9.50"><span class="item-name">Assiette charcuterie</span><span class="item-price">9,50 €</span></button>
+        <button class="menu-item" data-cat="entrees" data-name="Burrata"               data-price="8.50"><span class="item-name">Burrata</span><span class="item-price">8,50 €</span></button>
+
+        <!-- ─── PIZZAS ─── -->
+        <div class="menu-category-label" data-cat="pizzas">Pizzas</div>
+        <button class="menu-item" data-cat="pizzas" data-name="Margherita"        data-price="9.00"><span class="item-name">Margherita</span><span class="item-price">9,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Napolitaine"       data-price="10.00"><span class="item-name">Napolitaine</span><span class="item-price">10,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Regina"            data-price="11.00"><span class="item-name">Regina</span><span class="item-price">11,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Végétarienne"      data-price="11.00"><span class="item-name">Végétarienne</span><span class="item-price">11,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Paysanne"          data-price="11.00"><span class="item-name">Paysanne</span><span class="item-price">11,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Reine"             data-price="12.00"><span class="item-name">Reine</span><span class="item-price">12,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="4 Fromages"        data-price="12.00"><span class="item-name">4 Fromages</span><span class="item-price">12,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Américaine"        data-price="12.00"><span class="item-name">Américaine</span><span class="item-price">12,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Marocaine"         data-price="12.00"><span class="item-name">Marocaine</span><span class="item-price">12,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Orientale"         data-price="12.00"><span class="item-name">Orientale</span><span class="item-price">12,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Forestière"        data-price="13.00"><span class="item-name">Forestière</span><span class="item-price">13,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Calzone"           data-price="13.00"><span class="item-name">Calzone</span><span class="item-price">13,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Poulet Basilic"    data-price="13.00"><span class="item-name">Poulet Basilic</span><span class="item-price">13,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Chèvre Miel"       data-price="13.00"><span class="item-name">Chèvre Miel</span><span class="item-price">13,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Savoyarde"         data-price="14.00"><span class="item-name">Savoyarde</span><span class="item-price">14,00 €</span></button>
+        <button class="menu-item" data-cat="pizzas" data-name="Spéciale Mouna"    data-price="16.00"><span class="item-name">Spéciale Mouna</span><span class="item-price">16,00 €</span></button>
+
+        <!-- ─── PÂTES ─── -->
+        <div class="menu-category-label" data-cat="pates">Pâtes</div>
+        <button class="menu-item" data-cat="pates" data-name="Spaghetti Bolognaise"   data-price="11.00"><span class="item-name">Spaghetti Bolognaise</span><span class="item-price">11,00 €</span></button>
+        <button class="menu-item" data-cat="pates" data-name="Carbonara"              data-price="12.00"><span class="item-name">Carbonara</span><span class="item-price">12,00 €</span></button>
+        <button class="menu-item" data-cat="pates" data-name="Penne Arrabiata"        data-price="11.00"><span class="item-name">Penne Arrabiata</span><span class="item-price">11,00 €</span></button>
+        <button class="menu-item" data-cat="pates" data-name="Tagliatelle Saumon"     data-price="13.50"><span class="item-name">Tagliatelle Saumon</span><span class="item-price">13,50 €</span></button>
+        <button class="menu-item" data-cat="pates" data-name="Gnocchi Gorgonzola"     data-price="12.50"><span class="item-name">Gnocchi Gorgonzola</span><span class="item-price">12,50 €</span></button>
+
+        <!-- ─── VIANDES ─── -->
+        <div class="menu-category-label" data-cat="viandes">Viandes</div>
+        <button class="menu-item" data-cat="viandes" data-name="Escalope milanaise"   data-price="14.00"><span class="item-name">Escalope milanaise</span><span class="item-price">14,00 €</span></button>
+        <button class="menu-item" data-cat="viandes" data-name="Brochette de bœuf"    data-price="15.00"><span class="item-name">Brochette de bœuf</span><span class="item-price">15,00 €</span></button>
+        <button class="menu-item" data-cat="viandes" data-name="Poulet grillé"        data-price="13.50"><span class="item-name">Poulet grillé</span><span class="item-price">13,50 €</span></button>
+        <button class="menu-item" data-cat="viandes" data-name="Côtelettes d'agneau"  data-price="17.00"><span class="item-name">Côtelettes d'agneau</span><span class="item-price">17,00 €</span></button>
+        <button class="menu-item" data-cat="viandes" data-name="Merguez grillées"     data-price="12.00"><span class="item-name">Merguez grillées</span><span class="item-price">12,00 €</span></button>
+
+        <!-- ─── DESSERTS ─── -->
+        <div class="menu-category-label" data-cat="desserts">Desserts</div>
+        <button class="menu-item" data-cat="desserts" data-name="Tiramisu"          data-price="5.50"><span class="item-name">Tiramisu</span><span class="item-price">5,50 €</span></button>
+        <button class="menu-item" data-cat="desserts" data-name="Panna Cotta"       data-price="5.00"><span class="item-name">Panna Cotta</span><span class="item-price">5,00 €</span></button>
+        <button class="menu-item" data-cat="desserts" data-name="Profiteroles"      data-price="6.50"><span class="item-name">Profiteroles</span><span class="item-price">6,50 €</span></button>
+        <button class="menu-item" data-cat="desserts" data-name="Fondant chocolat"  data-price="6.00"><span class="item-name">Fondant chocolat</span><span class="item-price">6,00 €</span></button>
+        <button class="menu-item" data-cat="desserts" data-name="Glace 2 boules"    data-price="4.00"><span class="item-name">Glace 2 boules</span><span class="item-price">4,00 €</span></button>
+
+        <!-- ─── BOISSONS ─── -->
+        <div class="menu-category-label" data-cat="boissons">Boissons</div>
+        <button class="menu-item" data-cat="boissons" data-name="Eau plate 50cl"       data-price="2.00"><span class="item-name">Eau plate 50cl</span><span class="item-price">2,00 €</span></button>
+        <button class="menu-item" data-cat="boissons" data-name="Eau gazeuse 50cl"     data-price="2.50"><span class="item-name">Eau gazeuse 50cl</span><span class="item-price">2,50 €</span></button>
+        <button class="menu-item" data-cat="boissons" data-name="Coca-Cola 33cl"       data-price="3.00"><span class="item-name">Coca-Cola 33cl</span><span class="item-price">3,00 €</span></button>
+        <button class="menu-item" data-cat="boissons" data-name="Jus d'orange"         data-price="3.50"><span class="item-name">Jus d'orange</span><span class="item-price">3,50 €</span></button>
+        <button class="menu-item" data-cat="boissons" data-name="Bière pression 25cl"  data-price="3.50"><span class="item-name">Bière pression 25cl</span><span class="item-price">3,50 €</span></button>
+        <button class="menu-item" data-cat="boissons" data-name="Vin rouge 25cl"       data-price="4.00"><span class="item-name">Vin rouge 25cl</span><span class="item-price">4,00 €</span></button>
+        <button class="menu-item" data-cat="boissons" data-name="Café"                 data-price="2.00"><span class="item-name">Café</span><span class="item-price">2,00 €</span></button>
+
+      </div><!-- /menu-grid -->
+    </section>
+
+    <!-- ── COL 3 : ticket de la commande active ── -->
+    <aside class="col-ticket">
+
+      <!-- Pas de commande sélectionnée -->
+      <div class="ticket-placeholder" id="ticketPlaceholder">
+        <p>Créez ou sélectionnez<br>une commande</p>
+      </div>
+
+      <!-- Ticket actif (masqué par défaut) -->
+      <div class="ticket-active" id="ticketActive" style="display:none">
+
+        <div class="ticket-header">
+          <div class="ticket-title" id="ticketTitle">Commande #—</div>
+          <div class="ticket-time" id="ticketTime"></div>
+        </div>
+
+        <!-- Infos client -->
+        <div class="ticket-section">
+          <div class="field-row">
+            <div class="field-group">
+              <label>Prénom</label>
+              <input type="text" id="fieldPrenom" placeholder="Marie" />
+            </div>
+            <div class="field-group">
+              <label>Nom</label>
+              <input type="text" id="fieldNom" placeholder="Dupont" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Téléphone</label>
+            <input type="tel" id="fieldTel" placeholder="0478 00 00 00" />
+          </div>
+        </div>
+
+        <!-- Service -->
+        <div class="ticket-section">
+          <div class="service-tabs">
+            <button class="svc-btn active" data-svc="emporter">À emporter</button>
+            <button class="svc-btn" data-svc="sur_place">Sur place</button>
+            <button class="svc-btn" data-svc="livraison">Livraison</button>
+          </div>
+
+          <div class="delivery-block" id="deliveryBlock" style="display:none">
+            <div class="field-group" style="margin-top:8px">
+              <label>Zone de livraison</label>
+              <select id="fieldZone">
+                <optgroup label="Gratuit">
+                  <option value="beaumont">Beaumont</option>
+                </optgroup>
+                <optgroup label="+2€ (gratuit dès 30€)">
+                  <option value="clermont">Clermont</option>
+                  <option value="entite">Villages entité</option>
+                </optgroup>
+                <optgroup label="+2€">
+                  <option value="grandrieu">Grand-Rieu</option>
+                  <option value="vergnies">Vergnies</option>
+                </optgroup>
+                <optgroup label="+3€">
+                  <option value="sivry">Sivry</option>
+                  <option value="bousignies">Bousignies-sur-Roc</option>
+                </optgroup>
+                <optgroup label="+4€ (min. 30€)">
+                  <option value="rance">Rance</option>
+                  <option value="sautin">Sautin</option>
+                  <option value="froidchapelle">Froidchapelle</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="field-group">
+              <label>Adresse</label>
+              <input type="text" id="fieldAdresse" placeholder="Rue, numéro…" />
+            </div>
+            <div class="delivery-info-box" id="deliveryInfoBox"></div>
+          </div>
+
+          <div class="field-row" style="margin-top:8px">
+            <div class="field-group">
+              <label>Date</label>
+              <input type="date" id="fieldDate" />
+            </div>
+            <div class="field-group">
+              <label>Heure</label>
+              <input type="time" id="fieldHeure" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Lignes article -->
+        <div class="ticket-lines" id="ticketLines">
+          <p class="ticket-empty">Cliquez sur un article du menu pour l'ajouter.</p>
+        </div>
+
+        <!-- Totaux -->
+        <div class="totals" id="totalsBlock" style="display:none">
+          <div class="total-row">
+            <span>Sous-total</span>
+            <span id="totalSub">0,00 €</span>
+          </div>
+          <div class="total-row surcharge-row" id="surchargeRow" style="display:none">
+            <span>Livraison</span>
+            <span id="totalDelivery">+0,00 €</span>
+          </div>
+          <div class="total-row grand">
+            <span>Total</span>
+            <span id="totalGrand">0,00 €</span>
+          </div>
+        </div>
+
+        <!-- Paiement -->
+        <div class="payment-row" id="paymentRow">
+          <button class="pay-btn active" data-pay="cash">💶 Espèces</button>
+          <button class="pay-btn" data-pay="virement">🏦 Virement/ QrCode</button>
+        </div>
+
+        <!-- Notes -->
+        <textarea class="ticket-notes" id="fieldNotes" placeholder="Notes internes, allergies…" rows="2"></textarea>
+
+        <!-- Actions ticket -->
+        <div class="ticket-actions">
+          <button class="btn-print" id="btnPrint">🖨 Imprimer</button>
+          <button class="btn-delete-order" id="btnDeleteOrder">🗑 Supprimer</button>
+        </div>
+
+      </div><!-- /ticket-active -->
+    </aside>
+
+  </div><!-- /app-layout -->
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="commandes.js"></script>
+</body>
+</html>
